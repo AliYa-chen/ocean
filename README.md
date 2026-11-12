@@ -1,5 +1,7 @@
 # 蔚蓝之境 · Ocean Scene
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 ![预览](docs/preview.png)
 
 从「海洋 + 体积云」示例工程中独立抽出的**海洋场景**，Vue 3 + TypeScript + Vite + Three.js 单页项目。
@@ -68,4 +70,18 @@ public/
 
 ## 资源说明
 
-模型与贴图遵循各自许可，来源见 `public/water/ATTRIBUTION.md`、`public/water/takram/LICENSE`。
+第三方模型、贴图和库遵循各自许可，来源、署名和授权状态见
+[资源说明](public/water/ATTRIBUTION.md)、[Takram 许可证](public/water/takram/LICENSE)
+和 [Draco 许可证](public/jsm/draco/gltf/LICENSE)。部分素材的来源或再分发授权尚未核实，
+这些素材不属于本项目 MIT 授权范围；使用、商用或再分发前需另行确认授权。
+
+## 开源协议
+
+本项目原创代码、文档和配置采用 [MIT License](LICENSE)，
+Copyright (c) 2026 AliYa-chen。
+
+允许学习、使用、复制、修改、合并、分发、再授权和商用，也允许用于闭源项目；
+分发时须保留版权声明及 MIT 许可声明。软件按原样提供，不作任何担保。
+
+第三方内容的适用范围见 [NOTICE](NOTICE) 和上述资源说明，原有许可与署名要求继续适用。
+`package.json` 中的 `private: true` 仅用于防止误发布到 npm，不影响仓库公开或 MIT 授权。

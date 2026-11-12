@@ -1,0 +1,19 @@
+Ocean Scene / 蔚蓝之境
+Copyright (c) 2026 AliYa-chen
+
+The original source code, documentation and configuration in this project
+are licensed under the MIT License. See LICENSE.
+
+Third-party code, models, textures and other assets retain their respective
+copyrights and license terms. The project MIT License does not grant rights
+to third-party materials or resolve unverified asset permissions.
+
+Third-party notices and asset provenance:
+- public/water/ATTRIBUTION.md
+- public/water/takram/LICENSE (Takram, MIT)
+- public/jsm/draco/gltf/LICENSE (Draco, Apache-2.0)
+- public/jsm/draco/gltf/AUTHORS (Google Inc. and other contributors)
+
+Dependencies installed through npm retain the licenses included in their
+respective distributions. Preserve the applicable third-party license and
+attribution notices when redistributing the project or its build output.

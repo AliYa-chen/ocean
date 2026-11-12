@@ -2,6 +2,7 @@
   "name": "ocean-scene",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "蔚蓝之境 · Vue3 + Three.js 体积云海洋场景",
   "scripts": {

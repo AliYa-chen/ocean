@@ -1,5 +1,11 @@
 # Ocean scene asset provenance
 
+The root MIT License covers the project's original source code, documentation
+and configuration. Third-party assets retain their own terms; they are not
+relicensed under MIT by this repository. Source availability is not evidence
+of permission to use or redistribute an asset. Unverified entries below need
+permission from the relevant rights holder before reuse or redistribution.
+
 Reference: https://www.threejswaterpro.com/ and the user-supplied recording
 `SnowShot_Video_2026-09-24_09-39-25.mp4`. Assets below were observed in the public
 demo's resource inventory on 2026-09-24 and are stored locally, with no runtime
@@ -34,6 +40,41 @@ licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).
 
 The other reference GLBs do not embed author/license metadata. Their public
 availability does not establish a redistribution license; that status is unverified.
+The reference textures `foam.jpg`, `sand.jpg` and `sand-normal.jpg` also have
+unverified redistribution permissions. The derived `foam-filaments.png` mask
+retains the licensing uncertainty of its source texture.
+
+## Earlier assets with unverified provenance
+
+The following files were carried over from the earlier project. Their author,
+source and redistribution permission have not been established. Their presence
+in this repository does not grant a license to them.
+
+| Local file (relative to public/) | Status |
+| --- | --- |
+| jsm/draco/gltf/Shark.glb | Source and license unverified |
+| jsm/draco/gltf/chenchuan.glb | Source and license unverified |
+| jsm/draco/gltf/chenchuan2.glb | Source and license unverified |
+| water/textures/cracks.png | Source and license unverified |
+| water/textures/smokeMap.png | Source and license unverified |
+
+## Draco utilities
+
+The JavaScript and WebAssembly Draco utilities in `public/jsm/draco/gltf/`
+are distributed under Apache License 2.0. A copy of the upstream license is
+included at `public/jsm/draco/gltf/LICENSE`.
+The upstream copyright-holder list is preserved in
+`public/jsm/draco/gltf/AUTHORS` (Google Inc. and other contributors).
+The four utility files match the Three.js r177 distribution byte for byte;
+the license and author list were copied verbatim from google/draco 1.5.7.
+
+Upstream: https://github.com/google/draco
+
+Three.js distribution documentation:
+https://github.com/mrdoob/three.js/blob/r177/examples/jsm/libs/draco/README.md
+
+The `.glb` models in the same directory are separate assets and are not covered
+by the Draco license.
 
 ## Unused earlier sky reference
 
