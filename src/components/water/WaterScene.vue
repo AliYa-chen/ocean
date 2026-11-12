@@ -62,9 +62,6 @@ function reset() {
   engine?.resetCamera()
 }
 function dive() { mode.value = 'fly'; engine?.underwaterView() }
-function focusWreck(index = 0) {
-  if (!engine?.focusWreck(index)) notify('沉船模型还在加载，请稍候')
-}
 function toggleWinter() {
   stopWeatherTransition()
   const frozen = settings.freeze > 0.3
@@ -188,8 +185,6 @@ onBeforeUnmount(() => {
       <div class="camera-help" v-else-if="mode === 'fly'"><span>前后 / 左右 <kbd>W A S D</kbd></span><span>下潜 / 上浮 <kbd>Q / E</kbd></span><span>加速漫游 <kbd>Shift</kbd></span><span>转动视角 <kbd>左键</kbd></span></div>
       <div class="camera-help" v-else><span>前进 / 后退 <kbd>W / S</kbd></span><span>左转 / 右转 <kbd>A / D</kbd></span><span>航行速度 <em>{{ speed.toFixed(1) }} kn</em></span></div>
       <button class="dive-button" @click="dive">⌁ <span>探索水下世界</span></button>
-      <button class="dive-button jump-button" @click="focusWreck(0)">⌖ <span>海底沉船</span></button>
-      <button class="dive-button jump-button" @click="focusWreck(1)">⌖ <span>二号沉船</span></button>
     </aside>
     <button class="panel-toggle glass-panel" :aria-expanded="panelOpen" @click="panelOpen = !panelOpen" :title="panelOpen ? '隐藏参数 H' : '显示参数 H'">{{ panelOpen ? '收起参数 ›' : '‹ 场景参数' }}</button>
     <aside v-show="panelOpen" class="settings-panel glass-panel" aria-label="海洋参数">

@@ -53,8 +53,6 @@ in this repository does not grant a license to them.
 | Local file (relative to public/) | Status |
 | --- | --- |
 | jsm/draco/gltf/Shark.glb | Source and license unverified |
-| jsm/draco/gltf/chenchuan.glb | Source and license unverified |
-| jsm/draco/gltf/chenchuan2.glb | Source and license unverified |
 | water/textures/cracks.png | Source and license unverified |
 | water/textures/smokeMap.png | Source and license unverified |
 

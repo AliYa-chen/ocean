@@ -102,19 +102,8 @@ export class OceanScene {
   private readonly buoys: THREE.Group[] = []
   private readonly fish: THREE.Object3D[] = []
   private shark: THREE.Object3D | null = null
-  private readonly wrecks: THREE.Object3D[] = []
   // 开场镜头：先在云层里漂 2 秒，再俯冲穿过云底落回船边。
   private readonly intro = { active: false, elapsed: 0, hold: 2, descent: 5 }
-  private readonly flight = {
-    active: false,
-    elapsed: 0,
-    duration: 1.5,
-    fromPosition: new THREE.Vector3(),
-    fromTarget: new THREE.Vector3(),
-    midPosition: new THREE.Vector3(),
-    toPosition: new THREE.Vector3(),
-    toTarget: new THREE.Vector3()
-  }
   private sharkPath: THREE.CatmullRomCurve3 | null = null
   private sharkPathLength = 1
   private sharkProgress = 0
@@ -431,37 +420,12 @@ export class OceanScene {
     return model
   }
 
-  /** 把一条沉船摆到海床上：先按给定姿态旋转，再让旋转后的最低点沉进沙里指定深度。 */
-  private placeWreck(model: THREE.Object3D, options: { length: number; x: number; z: number; yaw: number; pitch: number; roll: number; sink: number }) {
-    const hull = this.normalizeModel(model, options.length, 0)
-    hull.visible = true
-    const wreck = new THREE.Group()
-    wreck.add(hull)
-    this.scene.add(wreck)
-    wreck.rotation.set(options.pitch, options.yaw, options.roll)
-    wreck.updateMatrixWorld(true)
-    const box = new THREE.Box3().setFromObject(wreck)
-    const center = box.getCenter(new THREE.Vector3())
-    const reach = options.length * 0.75
-    // 海床是缓慢起伏的曲面，取船体覆盖范围内最低的点，免得一头悬空。
-    const floor = Math.min(
-      this.seabedHeight(options.x, options.z),
-      this.seabedHeight(options.x + reach, options.z),
-      this.seabedHeight(options.x - reach, options.z),
-      this.seabedHeight(options.x, options.z + reach),
-      this.seabedHeight(options.x, options.z - reach)
-    )
-    wreck.position.set(options.x - center.x, floor - box.min.y - options.sink, options.z - center.z)
-    this.wrecks.push(wreck)
-    return wreck
-  }
-
   private async loadModels() {
     this.draco.setDecoderPath('/jsm/draco/gltf/')
     const loader = new GLTFLoader().setDRACOLoader(this.draco)
-    // 以斜杠开头的名字视为仓库内的完整路径（鲨鱼与沉船模型不在 /water/models 下）。
-    const files = ['dutch_ship_medium_2k', 'island', 'buoy', 'rocks', 'seaweed', 'grass', 'fish', '/jsm/draco/gltf/Shark.glb', '/jsm/draco/gltf/chenchuan.glb', '/jsm/draco/gltf/chenchuan2.glb']
-    const labels = ['木帆船', '沙滩海岛', '航道浮标', '海底礁石', '海藻', '海草', '鱼群', '鲨鱼', '海底沉船', '二号沉船']
+    // 以斜杠开头的名字视为仓库内的完整路径（鲨鱼模型不在 /water/models 下）。
+    const files = ['dutch_ship_medium_2k', 'island', 'buoy', 'rocks', 'seaweed', 'grass', 'fish', '/jsm/draco/gltf/Shark.glb']
+    const labels = ['木帆船', '沙滩海岛', '航道浮标', '海底礁石', '海藻', '海草', '鱼群', '鲨鱼']
     let count = 0
     try {
       const [results] = await Promise.all([Promise.all(files.map(async (name, index) => {
@@ -476,7 +440,7 @@ export class OceanScene {
         if (!this.disposed) this.callbacks.progress(Math.round(++count / (files.length + 1) * 100), '体积云与大气已就绪')
       })])
       if (this.disposed) return
-      const [shipGLTF, islandGLTF, buoyGLTF, rocksGLTF, seaweedGLTF, grassGLTF, fishGLTF, sharkGLTF, wreckGLTF, wreck2GLTF] = results
+      const [shipGLTF, islandGLTF, buoyGLTF, rocksGLTF, seaweedGLTF, grassGLTF, fishGLTF, sharkGLTF] = results
       if (!shipGLTF || !islandGLTF || !buoyGLTF || !rocksGLTF || !seaweedGLTF || !grassGLTF || !fishGLTF) return
       const shipModel = this.normalizeModel(shipGLTF.scene, 28, 1.65)
       const shipSize = new THREE.Box3().setFromObject(shipModel).getSize(new THREE.Vector3())
@@ -559,15 +523,6 @@ export class OceanScene {
         this.sharkPath = new THREE.CatmullRomCurve3(route, true, 'catmullrom', 0.5)
         this.sharkPathLength = this.sharkPath.getLength()
         this.sharkProgress = 0
-      }
-      // 沉船：模型的长轴是 Z，绕 Z 旋转就是侧倾，绕 X 旋转是船头翘起。
-      if (wreckGLTF) {
-        // 一号：侧翻约 29°，大半船身陷进沙里。
-        this.placeWreck(wreckGLTF.scene, { length: 16, x: -110, z: 55, yaw: 2.1, pitch: 0.1, roll: -0.5, sink: 2.7 })
-      }
-      if (wreck2GLTF) {
-        // 二号：只是浅浅搁在海床上，倾斜和下沉都收着来。
-        this.placeWreck(wreck2GLTF.scene, { length: 14, x: 105, z: -75, yaw: 0.8, pitch: 0.07, roll: -0.28, sink: 1.1 })
       }
       this.updateWeatherLighting()
       this.updateEnvironment()
@@ -777,54 +732,6 @@ export class OceanScene {
     this.controls.update()
   }
 
-  /** 把镜头送到指定沉船斜上方并朝向它，不动当前的视角模式。模型还没加载完时返回 false。 */
-  focusWreck(index = 0) {
-    const wreck = this.wrecks[index]
-    if (!wreck) return false
-    const center = wreck.position
-    this.flyTo(
-      new THREE.Vector3(center.x + 10, center.y + 7, center.z + 18),
-      new THREE.Vector3(center.x, center.y + 2, center.z)
-    )
-    return true
-  }
-
-  /** 从当前位置平滑飞到目标机位，而不是瞬移。 */
-  private flyTo(position: THREE.Vector3, target: THREE.Vector3) {
-    this.stopIntro()
-    const distance = this.camera.position.distanceTo(position)
-    this.flight.fromPosition.copy(this.camera.position)
-    this.flight.fromTarget.copy(this.controls.target)
-    this.flight.toPosition.copy(position)
-    this.flight.toTarget.copy(target)
-    // 二次贝塞尔的中点抬高一些，长距离飞行时不会贴着海面或擦着海床过去。
-    this.flight.midPosition.copy(position).add(this.camera.position).multiplyScalar(0.5)
-    this.flight.midPosition.y += Math.max(6, distance * 0.18)
-    this.flight.elapsed = 0
-    this.flight.duration = THREE.MathUtils.clamp(distance / 90, 0.9, 2.4)
-    this.flight.active = true
-    // 飞行途中先接管鼠标，免得手一抖把机位带偏。
-    this.controls.enabled = false
-  }
-
-  private updateCameraFlight(delta: number) {
-    const flight = this.flight
-    if (!flight.active) return
-    flight.elapsed += delta
-    const progress = Math.min(flight.elapsed / flight.duration, 1)
-    // 缓入缓出，起落都不会有突然的加速感。
-    const eased = progress < 0.5 ? 4 * progress ** 3 : 1 - (-2 * progress + 2) ** 3 / 2
-    const inverse = 1 - eased
-    this.camera.position.copy(flight.fromPosition).multiplyScalar(inverse * inverse)
-      .addScaledVector(flight.midPosition, 2 * inverse * eased)
-      .addScaledVector(flight.toPosition, eased * eased)
-    this.controls.target.lerpVectors(flight.fromTarget, flight.toTarget, eased)
-    if (progress >= 1) {
-      flight.active = false
-      this.controls.enabled = true
-    }
-  }
-
   async fullscreen() {
     if (document.fullscreenElement) await document.exitFullscreen()
     else await this.host.parentElement?.requestFullscreen()
@@ -896,11 +803,10 @@ export class OceanScene {
     if (document.hidden) { this.lastFrame = 0; return }
     const delta = this.lastFrame ? Math.min((now - this.lastFrame) / 1000, 0.05) : 1 / 60
     this.lastFrame = now
-    // 开场镜头和机位飞行期间接管相机，避免几套逻辑抢位置。
+    // 开场镜头期间接管相机，避免移动控制覆盖镜头位置。
     if (this.intro.active) this.updateIntro(delta)
     else {
-      if (this.flight.active) this.updateCameraFlight(delta)
-      else this.updateMovement(delta)
+      this.updateMovement(delta)
       this.controls.update()
     }
     if (!this.settings.paused) this.time += delta

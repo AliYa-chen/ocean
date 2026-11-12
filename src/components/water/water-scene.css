@@ -24,7 +24,6 @@ kbd { color: #bce7f9; border: 1px solid #54788e57; border-radius: 3px; padding: 
 .dive-button { width: 100%; padding: 10px 0 0; border-top: 1px solid #8aa5b429; background: transparent; color: #87c8e0; font-size: 20px; }
 .dive-button span { font-size: 10px; vertical-align: 3px; margin-left: 3px; }
 .dive-button:hover { color: #c6f0ff; }
-.dive-button + .dive-button { padding: 8px 0 2px; }
 .settings-panel { position: absolute; width: 286px; top: 20px; right: 20px; max-height: calc(100% - 72px); overflow: auto; scrollbar-width: thin; scrollbar-color: #446074 transparent; }
 .panel-heading { padding: 19px 18px 17px; border-bottom: 1px solid #88a8be36; }
 .panel-heading div { font-size: 12px; letter-spacing: 2.5px; font-weight: 400; }
